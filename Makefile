@@ -2,7 +2,7 @@
 CC      := gcc
 CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -O3
 LDFLAGS :=
-LDLIBS  := -lm
+LDLIBS  := -lm -lpthread
 TARGET  := main
 OBJS    := build/main.o build/game.o
 
