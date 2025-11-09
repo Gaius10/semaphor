@@ -5,11 +5,13 @@
 #include "../lib/game.h"
 
 void* car_factory(void* arg) {
+    // @todo semaphores to control access to roads memmory
+
     unsigned int random_number;
     srand(time(NULL));
 
-    Stack *road1 = ((GameArgs*)arg)->road1; // horizontal
-    Stack *road2 = ((GameArgs*)arg)->road2; // vertical
+    List *road1 = ((GameArgs*)arg)->road1; // horizontal
+    List *road2 = ((GameArgs*)arg)->road2; // vertical
 
     Car* car_buffer = NULL;
 
@@ -24,12 +26,12 @@ void* car_factory(void* arg) {
             case 1:
                 // push car to stack 1
                 car_buffer = create_car(-10, 0);
-                push(road1, car)
+                list_append(road1, car)
                 break;
             case 2:
                 // push car to stack 2
                 car_buffer = create_car(0, -10);
-                push(road2, car);
+                list_append(road2, car);
                 break;
         }
     }
