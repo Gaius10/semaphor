@@ -70,19 +70,81 @@ void* car_mover(void* arg) {
 }
 
 void* world_renderer(void* arg) {
+    game_t* game = (game_t*)arg;
+
+    list_t *road1 = &game->road1; // horizontal
+    list_t *road2 = &game->road2; // vertical
+
+    car_t* car_buffer = NULL;
+
     while (1) {
         system("clear");
 
-        for (uint8_t i = 0; i < 40; i++) {
-            for (uint8_t j = 0; j < 40; j++) {
-                if (i == 19 || j == 19) {
-                    printf("+");
-                } else {
-                    printf(" ");
+        sem_wait(&game->road1_memmory);
+        sem_wait(&game->road2_memmory);
+
+        for (int8_t i = 10; i >= -10; i--) {
+            for (int8_t j = -10; j <= 10; j++) {
+
+                // check road 1
+                for (uint8_t k = 0; k < road1->size; k++) {
+                    car_buffer = (car_t*)list_get(road1, k);
+                    if (car_buffer->pos_x == j && car_buffer->pos_y == i) {
+                        printf(">");
+                        break;
+                    }
                 }
+
+                // check road 2
+                for (uint8_t k = 0; k < road2->size; k++) {
+                    car_buffer = (car_t*)list_get(road2, k);
+                    if (car_buffer->pos_x == j && car_buffer->pos_y == i) {
+                        printf("^");
+                        break;
+                    }
+                }
+
+                printf(" ");
             }
+
             printf("\n");
         }
+
+        sem_post(&game->road1_memmory);
+        sem_post(&game->road2_memmory);
+
+        sleep(1);
+    }
+
+    return NULL;
+}
+
+void* world_renderer_debugger(void* arg) {
+    game_t* game = (game_t*)arg;
+
+    list_t *road1 = &game->road1; // horizontal
+    list_t *road2 = &game->road2; // vertical
+
+    car_t* car_buffer = NULL;
+
+    while (1) {
+        system("clear");
+
+        sem_wait(&game->road1_memmory);
+        sem_wait(&game->road2_memmory);
+
+        for (uint8_t i = 0; i < road1->size; i++) {
+            car_buffer = (car_t*)list_get(road1, i);
+            printf("Road 1 - Car %d: Position X: %d | Position Y: %d\n", i, car_buffer->pos_x, car_buffer->pos_y);
+        }
+
+        for (uint8_t i = 0; i < road2->size; i++) {
+            car_buffer = (car_t*)list_get(road2, i);
+            printf("Road 2 - Car %d: Position X: %d | Position Y: %d\n", i, car_buffer->pos_x, car_buffer->pos_y);
+        }
+
+        sem_post(&game->road1_memmory);
+        sem_post(&game->road2_memmory);
 
         sleep(1);
     }
