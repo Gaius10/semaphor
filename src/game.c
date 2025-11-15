@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <semaphore.h>
 #include <time.h>
+
 #include "../lib/list.h"
 #include "../lib/game.h"
 
@@ -11,8 +13,13 @@ void* car_factory(void* arg) {
     unsigned int random_number;
     srand(time(NULL));
 
-    List *road1 = &((GameArgs*)arg)->road1; // horizontal
-    List *road2 = &((GameArgs*)arg)->road2; // vertical
+    GameContext* game = (GameContext*)arg;
+
+    List *road1 = &game->road1; // horizontal
+    List *road2 = &game->road2; // vertical
+
+    sem_wait(&game->road1_memmory);
+    sem_wait(&game->road2_memmory);
 
     Car* car_buffer = NULL;
 
@@ -37,7 +44,22 @@ void* car_factory(void* arg) {
         }
     }
 
-    printf("Car factory is running!\n");
+    sem_post(&game->road1_memmory);
+    sem_post(&game->road2_memmory);
+
+    return NULL;
+}
+
+void* car_mover(void* arg) {
+    // @todo
+    printf("Car mover is running!\n");
+    printf("arg: %s\n", (char*)arg);
+    return NULL;
+}
+
+void* world_renderer(void* arg) {
+    // @todo
+    printf("World renderer is running!\n");
     printf("arg: %s\n", (char*)arg);
     return NULL;
 }

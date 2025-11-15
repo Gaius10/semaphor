@@ -14,9 +14,11 @@ typedef struct GameContext {
     sem_t road2_memmory;
     uint8_t move_road1;
     uint8_t move_road2;
-} GameArgs;
+} GameContext;
 
-void *car_factory(void* arg);
+void* car_factory(void* arg);
+void* car_mover(void* arg);
+void* world_renderer(void* arg);
 
 #endif
 
