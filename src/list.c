@@ -23,6 +23,7 @@ void list_remove(list_t* list, int index) {
         return;
     }
 
+    destroy_car(list->items[index]);
     for (int i = index; i < list->size - 1; i++) {
         list->items[i] = list->items[i + 1];
     }
