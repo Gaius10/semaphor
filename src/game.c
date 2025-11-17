@@ -121,6 +121,11 @@ void* car_mover(void* arg) {
             }
 
             car_buffer->pos_x += 1;
+
+            if (car_buffer->pos_x > 10) {
+                list_remove(road1, i);
+                i--;
+            }
         }
 
         // Process road 2
@@ -136,6 +141,11 @@ void* car_mover(void* arg) {
             }
 
             car_buffer->pos_y += 1;
+
+            if (car_buffer->pos_y > 10) {
+                list_remove(road2, i);
+                i--;
+            }
         }
 
         sem_post(&game->road1_memmory);
