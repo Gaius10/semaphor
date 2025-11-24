@@ -26,3 +26,8 @@ clean:
 bundle: clean
 	zip -r $(TARGET).zip Makefile src lib build
 
+docker:
+	docker compose build
+
+docker-run:
+	docker compose run main
